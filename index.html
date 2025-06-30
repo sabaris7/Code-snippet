@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <meta name="description" content="A sample HTML document." />
+    <meta name="keywords" content="HTML, sample, playground" />
+    <meta name="author" content="Sabareeshwaran Venkad" />
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <meta property="og:title" content="Document" />
+    <meta property="og:description" content="A sample HTML document." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="" />
+    <meta property="og:image" content="" />
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+      .masonry {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+        align-items: flex-start;
+      }
+
+      .column {
+        width: 45%;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .box {
+        width: 100%;
+        border-radius: 8px;
+      }
+
+      .yellow {
+        background-color: #ecbe4f;
+      }
+      .teal {
+        background-color: #3b9f94;
+      }
+      .navy {
+        background-color: #000d84;
+      }
+      .purple {
+        background-color: #563d7c;
+      }
+      .red {
+        background-color: #ff4640;
+      }
+      .orange {
+        background-color: #c2651d;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="masonry">
+      <div class="column" id="colLeft"></div>
+      <div class="column" id="colRight"></div>
+    </div>
+
+    <!-- DO NOT hide this with display: none -->
+    <div
+      id="source"
+      style="position: absolute; visibility: hidden; top: -9999px"
+    >
+      <div class="box yellow" style="height: 1080px"></div>
+      <div class="box teal" style="height: 980px"></div>
+      <div class="box navy" style="height: 460px"></div>
+      <div class="box purple" style="height: 360px"></div>
+      <div class="box red" style="height: 1820px"></div>
+      <div class="box orange" style="height: 600px"></div>
+    </div>
+
+    <script src="script.js"></script>
+
+    <script>
+      window.addEventListener("load", () => {
+        const colLeft = document.getElementById("colLeft");
+        const colRight = document.getElementById("colRight");
+        const source = document.getElementById("source");
+        const rawBlocks = Array.from(source.children);
+
+        // Step 1: Measure actual height by appending to a temp container
+        const blocksWithHeight = rawBlocks.map((block) => {
+          const clone = block.cloneNode(true);
+          document.body.appendChild(clone);
+          const height = clone.offsetHeight;
+          clone.remove();
+          return { element: block, height };
+        });
+
+        // Step 2: Distribute by total height
+        let heightLeft = 0;
+        let heightRight = 0;
+
+        blocksWithHeight.forEach(({ element, height }) => {
+          const adjustedHeight = height + 16; // include margin gap
+
+          if (heightLeft <= heightRight) {
+            colLeft.appendChild(element);
+            heightLeft += adjustedHeight;
+          } else {
+            colRight.appendChild(element);
+            heightRight += adjustedHeight;
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
